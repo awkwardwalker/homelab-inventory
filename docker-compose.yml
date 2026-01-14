@@ -8,10 +8,11 @@ services:
       DATABASE_URL: postgresql+psycopg://homelab_app:homelab_app@192.168.20.14:5432/homelab
     command: bash -lc "pip install -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'"
     networks:
-      - npm
+      lan20:
+        ipv4_address: 192.168.20.23
 
 networks:
-  npm:
-    ipv4_address: 192.168.20.23
+  lan20:
     external: true
-    name: br0:20
+    name: br0.20
+
