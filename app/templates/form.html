@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ "Edit" if item else "New" }} Item</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 20px; }
+    label { display:block; margin-top: 10px; font-weight: 600; }
+    input[type="text"], input[type="number"], textarea { width: 520px; padding: 8px; }
+    textarea { height: 120px; }
+    .row { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <h1>{{ "Edit" if item else "New" }} Item</h1>
+
+  <form method="post" action="{{ '/edit/' ~ item.id if item else '/new' }}">
+    <label>Name</label>
+    <input type="text" name="name" required value="{{ item.name if item else '' }}"/>
+
+    <label>IP Address</label>
+    <input type="text" name="ip_address" placeholder="e.g. 192.168.1.10" value="{{ item.ip_address if item and item.ip_address else '' }}"/>
+
+    <label>VLAN ID</label>
+    <input type="number" name="vlan_id" value="{{ item.vlan_id if item and item.vlan_id else '' }}"/>
+
+    <label>VLAN Name</label>
+    <input type="text" name="vlan_name" placeholder="e.g. LAN / DMZ / IoT" value="{{ item.vlan_name if item and item.vlan_name else '' }}"/>
+
+    <label>Description</label>
+    <textarea name="description">{{ item.description if item and item.description else '' }}</textarea>
+
+    <label>
+      <input type="checkbox" name="is_public" value="true" {% if item and item.is_public %}checked{% endif %}/>
+      Publicly accessible
+    </label>
+
+    <label>Access URL</label>
+    <input type="text" name="public_url" placeholder="e.g. https://sonarr.example.com" value="{{ item.public_url if item and item.public_url else '' }}"/>
+
+    <div style="margin-top: 14px;">
+      <button type="submit">Save</button>
+      <a href="/">Cancel</a>
+    </div>
+  </form>
+</body>
+</html>

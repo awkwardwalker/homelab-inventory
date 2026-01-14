@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Home Lab Inventory</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #ddd; padding: 10px; vertical-align: top; }
+    th { text-align: left; }
+    .pill { display:inline-block; padding:2px 8px; border:1px solid #ccc; border-radius:999px; font-size:12px; }
+    .actions form { display:inline; }
+    input[type="text"]{ padding:8px; width: 320px;}
+    a.button { padding:8px 12px; border:1px solid #333; text-decoration:none; border-radius:6px; }
+    button { padding:6px 10px; }
+  </style>
+</head>
+<body>
+  <h1>Home Lab Inventory</h1>
+
+  <div style="display:flex; gap:12px; align-items:center; margin-bottom: 14px;">
+    <a class="button" href="/new">+ Add item</a>
+    <form method="get" action="/">
+      <input type="text" name="q" value="{{ q }}" placeholder="Search name, VLAN, URL, notes..."/>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>IP / VLAN</th>
+        <th>Description</th>
+        <th>Public</th>
+        <th>URL</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in items %}
+      <tr>
+        <td><strong>{{ i.name }}</strong></td>
+        <td>
+          {% if i.ip_address %}{{ i.ip_address }}<br/>{% endif %}
+          {% if i.vlan_id %}<span class="pill">VLAN {{ i.vlan_id }}{% if i.vlan_name %} ({{ i.vlan_name }}){% endif %}</span>{% endif %}
+        </td>
+        <td>{{ i.description or "" }}</td>
+        <td>{{ "Yes" if i.is_public else "No" }}</td>
+        <td>{% if i.public_url %}<a href="{{ i.public_url }}">{{ i.public_url }}</a>{% endif %}</td>
+        <td class="actions">
+          <a href="/edit/{{ i.id }}">Edit</a>
+          <form method="post" action="/delete/{{ i.id }}" onsubmit="return confirm('Delete this item?');">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
